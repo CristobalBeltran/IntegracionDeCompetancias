@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>ProyectoAsistencia.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Driver para conectar con SQL Server / SQL Server Express / LocalDB.
+         En Visual Studio: click derecho en el proyecto > Administrar
+         paquetes NuGet > buscar Microsoft.Data.SqlClient -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+  </ItemGroup>
+
+</Project>

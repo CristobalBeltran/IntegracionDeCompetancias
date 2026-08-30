@@ -1,0 +1,140 @@
+:root {
+  --color-primario: #2b5797;
+  --color-primario-hover: #1f4174;
+  --color-fondo: #f2f4f7;
+  --color-tarjeta: #ffffff;
+  --color-borde: #d9dee5;
+  --color-texto: #24292e;
+  --color-texto-suave: #5b6572;
+  --color-exito: #1f8a4c;
+  --color-error: #c0392b;
+  --radio: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.topbar {
+  background: var(--color-primario);
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar h1 { font-size: 18px; margin: 0; font-weight: 600; }
+
+.info-usuario { display: flex; align-items: center; gap: 12px; }
+
+#contenido {
+  padding: 32px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.pantalla { width: 100%; max-width: 900px; }
+
+.tarjeta {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.tarjeta-login { max-width: 360px; margin: 60px auto 0; }
+
+.cabecera-tarjeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+h2 { margin-top: 0; }
+
+form { display: flex; flex-direction: column; gap: 6px; }
+
+label { font-size: 13px; color: var(--color-texto-suave); margin-top: 8px; }
+
+input, select {
+  padding: 9px 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+.boton {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.boton-primario { background: var(--color-primario); color: white; margin-top: 16px; }
+.boton-primario:hover { background: var(--color-primario-hover); }
+
+.boton-secundario { background: #e6e9ed; color: var(--color-texto); }
+.boton-secundario:hover { background: #d9dee5; }
+
+.boton-peligro { background: #fbeae8; color: var(--color-error); }
+.boton-peligro:hover { background: #f6d2ce; }
+
+.acciones-asistencia { display: flex; gap: 12px; margin-top: 12px; }
+
+.mensaje { min-height: 20px; margin-top: 12px; font-size: 14px; }
+.mensaje.exito { color: var(--color-exito); }
+.mensaje.error { color: var(--color-error); }
+
+.tabla-usuarios { width: 100%; border-collapse: collapse; margin-top: 12px; }
+
+.tabla-usuarios th, .tabla-usuarios td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 14px;
+}
+
+.tabla-usuarios th { color: var(--color-texto-suave); font-weight: 600; }
+
+.etiqueta-rol {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #e8eef7;
+  color: var(--color-primario);
+}
+
+.acciones-fila { display: flex; gap: 8px; }
+.acciones-fila .boton { padding: 6px 10px; font-size: 13px; }
+
+.oculto { display: none !important; }
+
+.fondo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal { width: 100%; max-width: 380px; }
+
+.acciones-modal { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+.pista { font-weight: 400; color: var(--color-texto-suave); }

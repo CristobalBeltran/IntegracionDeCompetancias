@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Registro de Asistencia</title>
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1>Sistema de Registro de Asistencia</h1>
+    <div id="infoUsuario" class="info-usuario oculto">
+      <span id="nombreUsuario"></span>
+      <button id="btnCerrarSesion" class="boton boton-secundario">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- ============ PANTALLA: LOGIN ============ -->
+    <section id="pantallaLogin" class="pantalla">
+      <div class="tarjeta tarjeta-login">
+        <h2>Iniciar sesión</h2>
+        <form id="formLogin">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required autocomplete="username">
+
+          <label for="loginPassword">Contraseña</label>
+          <input type="password" id="loginPassword" required autocomplete="current-password">
+
+          <button type="submit" class="boton boton-primario">Ingresar</button>
+        </form>
+        <p id="loginMensaje" class="mensaje"></p>
+      </div>
+    </section>
+
+    <!-- ============ PANTALLA: MENÚ EMPLEADO (CA-01) ============ -->
+    <section id="pantallaEmpleado" class="pantalla oculto">
+      <div class="tarjeta">
+        <h2>Marcar asistencia</h2>
+        <p>Registra tu hora de entrada o de salida del día de hoy.</p>
+        <div class="acciones-asistencia">
+          <button id="btnMarcarEntrada" class="boton boton-primario">Marcar entrada</button>
+          <button id="btnMarcarSalida" class="boton boton-primario">Marcar salida</button>
+        </div>
+        <p id="asistenciaMensaje" class="mensaje"></p>
+      </div>
+    </section>
+
+    <!-- ============ PANTALLA: MENÚ ADMINISTRADOR (GU-01/02/03) ============ -->
+    <section id="pantallaAdmin" class="pantalla oculto">
+      <div class="tarjeta">
+        <div class="cabecera-tarjeta">
+          <h2>Gestión de usuarios</h2>
+          <button id="btnNuevoUsuario" class="boton boton-primario">+ Nuevo usuario</button>
+        </div>
+
+        <p id="adminMensaje" class="mensaje"></p>
+
+        <table class="tabla-usuarios">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cuerpoTablaUsuarios">
+            <!-- filas generadas por app.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ MODAL: CREAR / EDITAR USUARIO ============ -->
+  <div id="modalUsuario" class="fondo-modal oculto">
+    <div class="tarjeta modal">
+      <h2 id="tituloModalUsuario">Nuevo usuario</h2>
+      <form id="formUsuario">
+        <input type="hidden" id="usuarioId">
+
+        <label for="usuarioNombre">Nombre</label>
+        <input type="text" id="usuarioNombre" required>
+
+        <label for="usuarioApellido">Apellido</label>
+        <input type="text" id="usuarioApellido" required>
+
+        <label for="usuarioEmail">Email</label>
+        <input type="email" id="usuarioEmail" required>
+
+        <label for="usuarioPassword">Contraseña <span id="pistaPassword" class="pista"></span></label>
+        <input type="password" id="usuarioPassword">
+
+        <label for="usuarioRol">Rol</label>
+        <select id="usuarioRol">
+          <option value="EMPLEADO">Empleado</option>
+          <option value="ADMINISTRADOR">Administrador</option>
+        </select>
+
+        <div class="acciones-modal">
+          <button type="button" id="btnCancelarUsuario" class="boton boton-secundario">Cancelar</button>
+          <button type="submit" class="boton boton-primario">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
