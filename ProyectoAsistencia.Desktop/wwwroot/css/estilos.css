@@ -94,6 +94,12 @@ input:focus, select:focus {
 .boton-peligro { background: #fbeae8; color: var(--color-error); }
 .boton-peligro:hover { background: #f6d2ce; }
 
+.boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.boton-primario:disabled:hover { background: var(--color-primario); }
+
 .acciones-asistencia { display: flex; gap: 12px; margin-top: 12px; }
 
 .mensaje { min-height: 20px; margin-top: 12px; font-size: 14px; }
@@ -138,3 +144,82 @@ input:focus, select:focus {
 .acciones-modal { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 .pista { font-weight: 400; color: var(--color-texto-suave); }
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover { color: var(--color-texto); }
+
+.tab-activo {
+  color: var(--color-primario);
+  border-bottom: 2px solid var(--color-primario);
+}
+
+.bloque-reporte { margin-top: 24px; }
+.bloque-reporte:first-of-type { margin-top: 8px; }
+
+.cabecera-reporte {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cabecera-reporte h3 {
+  font-size: 15px;
+  margin: 0;
+}
+
+.contador-reporte {
+  background: #e8eef7;
+  color: var(--color-primario);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 12px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.tabla-ordenable th[data-orden] {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.tabla-ordenable th[data-orden]:hover { color: var(--color-texto); }
+
+.tabla-ordenable th.col-orden-activa { color: var(--color-primario); }
+
+.flecha-orden { font-size: 10px; }
+
+.tabla-usuarios tbody tr:hover { background: #f7f9fc; }
+
+.etiqueta-hora {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.etiqueta-atraso { background: #fdeeea; color: #b34324; }
+.etiqueta-anticipada { background: #fef6e0; color: #9a7300; }
+
+.sin-datos {
+  color: var(--color-texto-suave);
+  font-style: italic;
+  text-align: center;
+}

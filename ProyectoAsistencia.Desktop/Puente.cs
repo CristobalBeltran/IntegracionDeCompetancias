@@ -30,11 +30,24 @@ namespace ProyectoAsistencia.Desktop
     //
     //   -> { accion: "marcarSalida", idUsuario }
     //   <- { accion: "marcarSalidaResultado", ok, mensaje }
+    //
+    //   -> { accion: "obtenerEstadoAsistencia", idUsuario }
+    //   <- { accion: "obtenerEstadoAsistenciaResultado", ok, entradaMarcada, salidaMarcada, horaEntrada, horaSalida }
+    //
+    //   -> { accion: "obtenerReportes" }
+    //   <- { accion: "obtenerReportesResultado", ok, atrasos: [...], salidasAnticipadas: [...], inasistencias: [...] }
+    //
+    //   -> { accion: "obtenerHistorial" }
+    //   <- { accion: "obtenerHistorialResultado", ok, historial: [...] }
+    //
+    //   -> { accion: "modificarAsistencia", idAsistencia, horaEntrada?, horaSalida? }
+    //   <- { accion: "modificarAsistenciaResultado", ok, mensaje }
     public class Puente
     {
         private readonly AutenticacionServicio _autenticacionServicio = new AutenticacionServicio();
         private readonly UsuarioServicio _usuarioServicio = new UsuarioServicio();
         private readonly AsistenciaServicio _asistenciaServicio = new AsistenciaServicio();
+        private readonly ReporteServicio _reporteServicio = new ReporteServicio();
 
         private static readonly JsonSerializerOptions OpcionesJson = new JsonSerializerOptions
         {
@@ -59,6 +72,10 @@ namespace ProyectoAsistencia.Desktop
                     "eliminarUsuario" => ManejarEliminarUsuario(nodo),
                     "marcarEntrada" => ManejarMarcarEntrada(nodo),
                     "marcarSalida" => ManejarMarcarSalida(nodo),
+                    "obtenerEstadoAsistencia" => ManejarObtenerEstadoAsistencia(nodo),
+                    "obtenerReportes" => ManejarObtenerReportes(),
+                    "obtenerHistorial" => ManejarObtenerHistorial(),
+                    "modificarAsistencia" => ManejarModificarAsistencia(nodo),
                     _ => new { accion = "error", ok = false, mensaje = $"Acción desconocida: {accion}" }
                 };
 
@@ -135,6 +152,59 @@ namespace ProyectoAsistencia.Desktop
         {
             var resultado = _asistenciaServicio.MarcarSalida(nodo["idUsuario"]?.GetValue<int>() ?? 0);
             return new { accion = "marcarSalidaResultado", ok = resultado.Ok, mensaje = resultado.Mensaje };
+        }
+
+        private object ManejarObtenerEstadoAsistencia(JsonNode nodo)
+        {
+            var estado = _asistenciaServicio.ObtenerEstadoHoy(nodo["idUsuario"]?.GetValue<int>() ?? 0);
+            return new
+            {
+                accion = "obtenerEstadoAsistenciaResultado",
+                ok = true,
+                entradaMarcada = estado.EntradaMarcada,
+                salidaMarcada = estado.SalidaMarcada,
+                horaEntrada = estado.HoraEntrada,
+                horaSalida = estado.HoraSalida
+            };
+        }
+
+        private object ManejarObtenerReportes()
+        {
+            ResumenReportes resumen = _reporteServicio.ObtenerResumen();
+            return new
+            {
+                accion = "obtenerReportesResultado",
+                ok = true,
+                atrasos = resumen.Atrasos,
+                salidasAnticipadas = resumen.SalidasAnticipadas,
+                inasistencias = resumen.Inasistencias
+            };
+        }
+
+        private object ManejarObtenerHistorial()
+        {
+            var historial = _reporteServicio.ObtenerHistorial();
+            return new { accion = "obtenerHistorialResultado", ok = true, historial };
+        }
+
+        private object ManejarModificarAsistencia(JsonNode nodo)
+        {
+            int idAsistencia = nodo["idAsistencia"]?.GetValue<int>() ?? 0;
+            TimeSpan? horaEntrada = ParsearHoraOpcional(nodo["horaEntrada"]);
+            TimeSpan? horaSalida = ParsearHoraOpcional(nodo["horaSalida"]);
+
+            var resultado = _asistenciaServicio.ModificarRegistro(idAsistencia, horaEntrada, horaSalida);
+            return new { accion = "modificarAsistenciaResultado", ok = resultado.Ok, mensaje = resultado.Mensaje };
+        }
+
+        // El HTML manda las horas como texto "HH:mm" (o vacío/null si el campo
+        // se dejó en blanco). Devuelve null cuando no hay valor utilizable.
+        private static TimeSpan? ParsearHoraOpcional(JsonNode nodoHora)
+        {
+            string texto = nodoHora?.GetValue<string>();
+            if (string.IsNullOrWhiteSpace(texto)) return null;
+
+            return TimeSpan.TryParse(texto, out TimeSpan hora) ? hora : null;
         }
     }
 }

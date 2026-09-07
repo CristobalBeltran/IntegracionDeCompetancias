@@ -1,4 +1,4 @@
-# Sistema de Registro de Asistencia — Prototipo (Avance #3)
+# Sistema de Registro de Asistencia — Prototipo (Avance #4)
 
 ## Arquitectura
 
@@ -7,11 +7,11 @@ El proyecto quedó dividido en 3 capas / 3 proyectos dentro de la misma solució
 ```
 ProyectoAsistencia.sln
 ├── ProyectoAsistencia.Core/       Lógica de negocio, sin nada de UI.
-│   ├── Modelo/                    Usuario, Rol, Asistencia, UsuarioDTO
+│   ├── Modelo/                    Usuario, Rol, Asistencia, UsuarioDTO, ReporteAsistenciaDTO
 │   ├── Util/                      ConexionBD, PasswordUtil (SHA-256)
-│   ├── Dao/                       UsuarioDAO, AsistenciaDAO (acceso a MySQL)
+│   ├── Dao/                       UsuarioDAO, AsistenciaDAO, ReporteDAO (acceso a SQL Server)
 │   └── Servicios/                 AutenticacionServicio, UsuarioServicio,
-│                                  AsistenciaServicio (validaciones + orquestación)
+│                                  AsistenciaServicio, ReporteServicio (validaciones + orquestación)
 │
 ├── ProyectoAsistencia.Desktop/    App de escritorio (WinForms + WebView2)
 │   ├── Program.cs                 Punto de entrada
@@ -43,8 +43,37 @@ datos ni al C#**. Todo pasa por mensajes JSON:
 5. El JS la recibe en `window.chrome.webview.addEventListener('message', ...)`.
 
 Todas las acciones soportadas (`login`, `listarUsuarios`, `crearUsuario`,
-`modificarUsuario`, `eliminarUsuario`, `marcarEntrada`, `marcarSalida`) están
-documentadas como comentario arriba de la clase `Puente`.
+`modificarUsuario`, `eliminarUsuario`, `marcarEntrada`, `marcarSalida`,
+`obtenerReportes`) están documentadas como comentario arriba de la clase
+`Puente`.
+
+## Reportes (Avance #4: RE-01, RE-02, RE-03)
+
+El panel de administrador ahora tiene 2 pestañas: **Usuarios** (lo de antes)
+y **Reportes**. La pestaña de Reportes pide los 3 listados de una sola vez
+con la acción `obtenerReportes` y los muestra en 3 tablas:
+
+- **Atrasos** (RE-01): entrada registrada después de las 09:30.
+- **Salidas anticipadas** (RE-02): salida registrada antes de las 17:30.
+- **Inasistencias** (RE-03): día con fila en `asistencia` pero sin entrada
+  ni salida.
+
+`ReporteDAO` filtra esto directo en SQL (mismas reglas que ya estaban
+codificadas en `Modelo.Asistencia.EsAtraso() / EsSalidaAnticipada() /
+EsInasistencia()`, solo que aquí se traducen a `WHERE` para no traer toda
+la tabla a memoria).
+
+## Tests: unitarios vs. de integración
+
+- `AsistenciaTests.cs` y `ServiciosValidacionTests.cs` son **unitarios**:
+  no tocan la base de datos, corren siempre y en cualquier máquina.
+- `ReporteServicioIntegrationTests.cs` es de **integración**: sí necesita
+  la base de datos real (LocalDB) con el script ya ejecutado, porque valida
+  que `ReporteServicio` + `ReporteDAO` + SQL Server efectivamente devuelvan
+  los 3 casos de prueba que trae el script (el atraso de Pedro, la salida
+  anticipada de Maria y su inasistencia). Si la BD no está levantada, estos
+  4 tests van a fallar por error de conexión — es esperable, hay que correr
+  `script_bd_asistencia_sqlserver.sql` primero (ver SETUP_SQLSERVER.md).
 
 Un detalle importante: al HTML **nunca** se le manda el hash de la contraseña.
 `UsuarioDTO` es una versión "limpia" de `Usuario` sin ese campo.
@@ -77,6 +106,7 @@ Un detalle importante: al HTML **nunca** se le manda el hash de la contraseña.
 ## Pendientes / ideas para el próximo avance
 
 - Cambiar contraseña desde el panel de administrador (hoy `Modificar` no la toca).
-- Mostrar el historial de asistencia y los reportes (RE-01/02/03) en el panel admin.
-- Manejo de errores de conexión a MySQL más amigable en el HTML (hoy solo se ve
-  el mensaje crudo de la excepción si la BD no está disponible).
+- Manejo de errores de conexión a SQL Server más amigable en el HTML (hoy solo
+  se ve el mensaje crudo de la excepción si la BD no está disponible).
+- Filtrar los reportes por rango de fecha o por usuario (hoy `ReporteDAO`
+  siempre trae el histórico completo).

@@ -47,9 +47,16 @@
       </div>
     </section>
 
-    <!-- ============ PANTALLA: MENÚ ADMINISTRADOR (GU-01/02/03) ============ -->
+    <!-- ============ PANTALLA: MENÚ ADMINISTRADOR (GU-01/02/03, RE-01/02/03) ============ -->
     <section id="pantallaAdmin" class="pantalla oculto">
-      <div class="tarjeta">
+      <div class="tabs">
+        <button id="tabUsuarios" class="tab tab-activo" data-tab="usuarios">Usuarios</button>
+        <button id="tabReportes" class="tab" data-tab="reportes">Reportes</button>
+        <button id="tabHistorial" class="tab" data-tab="historial">Historial</button>
+      </div>
+
+      <!-- ---- Subpanel: Gestión de usuarios ---- -->
+      <div id="subpanelUsuarios" class="tarjeta">
         <div class="cabecera-tarjeta">
           <h2>Gestión de usuarios</h2>
           <button id="btnNuevoUsuario" class="boton boton-primario">+ Nuevo usuario</button>
@@ -72,9 +79,121 @@
           </tbody>
         </table>
       </div>
+
+      <!-- ---- Subpanel: Reportes (RE-01, RE-02, RE-03) ---- -->
+      <div id="subpanelReportes" class="tarjeta oculto">
+        <div class="cabecera-tarjeta">
+          <h2>Reportes</h2>
+          <button id="btnActualizarReportes" class="boton boton-secundario">Actualizar</button>
+        </div>
+
+        <section class="bloque-reporte">
+          <div class="cabecera-reporte">
+            <h3>Atrasos <span class="pista">(entrada después de las 09:30)</span></h3>
+            <span id="contadorAtrasos" class="contador-reporte">0</span>
+          </div>
+          <table class="tabla-usuarios tabla-ordenable" data-reporte="atrasos">
+            <thead>
+              <tr>
+                <th data-orden="nombreCompleto">Empleado <span class="flecha-orden"></span></th>
+                <th data-orden="fecha" class="col-orden-activa">Fecha <span class="flecha-orden">▼</span></th>
+                <th data-orden="horaEntrada">Hora entrada <span class="flecha-orden"></span></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoTablaAtrasos"></tbody>
+          </table>
+        </section>
+
+        <section class="bloque-reporte">
+          <div class="cabecera-reporte">
+            <h3>Salidas anticipadas <span class="pista">(antes de las 17:30)</span></h3>
+            <span id="contadorSalidasAnticipadas" class="contador-reporte">0</span>
+          </div>
+          <table class="tabla-usuarios tabla-ordenable" data-reporte="salidasAnticipadas">
+            <thead>
+              <tr>
+                <th data-orden="nombreCompleto">Empleado <span class="flecha-orden"></span></th>
+                <th data-orden="fecha" class="col-orden-activa">Fecha <span class="flecha-orden">▼</span></th>
+                <th data-orden="horaSalida">Hora salida <span class="flecha-orden"></span></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoTablaSalidasAnticipadas"></tbody>
+          </table>
+        </section>
+
+        <section class="bloque-reporte">
+          <div class="cabecera-reporte">
+            <h3>Inasistencias</h3>
+            <span id="contadorInasistencias" class="contador-reporte">0</span>
+          </div>
+          <table class="tabla-usuarios tabla-ordenable" data-reporte="inasistencias">
+            <thead>
+              <tr>
+                <th data-orden="nombreCompleto">Empleado <span class="flecha-orden"></span></th>
+                <th data-orden="fecha" class="col-orden-activa">Fecha <span class="flecha-orden">▼</span></th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoTablaInasistencias"></tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- ---- Subpanel: Historial de entradas y salidas ---- -->
+      <div id="subpanelHistorial" class="tarjeta oculto">
+        <div class="cabecera-tarjeta">
+          <h2>Historial de asistencia</h2>
+          <button id="btnActualizarHistorial" class="boton boton-secundario">Actualizar</button>
+        </div>
+
+        <section class="bloque-reporte">
+          <div class="cabecera-reporte">
+            <h3>Todas las marcas <span class="pista">(entradas y salidas de todos los empleados)</span></h3>
+            <span id="contadorHistorial" class="contador-reporte">0</span>
+          </div>
+          <table class="tabla-usuarios tabla-ordenable" data-reporte="historial">
+            <thead>
+              <tr>
+                <th data-orden="nombreCompleto">Empleado <span class="flecha-orden"></span></th>
+                <th data-orden="fecha" class="col-orden-activa">Fecha <span class="flecha-orden">▼</span></th>
+                <th data-orden="horaEntrada">Hora entrada <span class="flecha-orden"></span></th>
+                <th data-orden="horaSalida">Hora salida <span class="flecha-orden"></span></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoTablaHistorial"></tbody>
+          </table>
+        </section>
+      </div>
     </section>
 
   </main>
+
+  <!-- ============ MODAL: MODIFICAR REGISTRO DE ASISTENCIA ============ -->
+  <div id="modalAsistencia" class="fondo-modal oculto">
+    <div class="tarjeta modal">
+      <h2>Modificar registro</h2>
+      <form id="formAsistencia">
+        <input type="hidden" id="asistenciaIdRegistro">
+
+        <p class="pista" id="asistenciaResumen"></p>
+
+        <label for="asistenciaHoraEntrada">Hora entrada</label>
+        <input type="time" id="asistenciaHoraEntrada">
+
+        <label for="asistenciaHoraSalida">Hora salida</label>
+        <input type="time" id="asistenciaHoraSalida">
+
+        <p id="asistenciaModalMensaje" class="mensaje"></p>
+
+        <div class="acciones-modal">
+          <button type="button" id="btnCancelarAsistencia" class="boton boton-secundario">Cancelar</button>
+          <button type="submit" class="boton boton-primario">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ============ MODAL: CREAR / EDITAR USUARIO ============ -->
   <div id="modalUsuario" class="fondo-modal oculto">
